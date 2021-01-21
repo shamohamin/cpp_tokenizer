@@ -1,0 +1,53 @@
+    #include "iostream"   
+
+            /*    
+    comments*/
+// comments
+// comments
+
+void main() {
+    int a, b, c, temp;
+    float temp;
+    int c = temp + 444;
+    int digit = 333e+10 + .5555e-10;
+    int digit = -100; 
+    bool temp = a >= b;
+
+    char l = 'A';
+    char ll = "akdjkabdb\", adkjhnkabd \"";
+    string lll = " multiple \
+        line \ 
+        literal \
+    ";
+
+    string lllll = " multiple \
+        line \" \
+        literal \
+    ";
+
+    string llllll = " multiple \
+        line \ 
+        literal ";
+    
+    string lllllll = "multiple " 
+                "line"
+                "literal";
+
+    char llll = '\'';
+
+    if (a==b) {
+        
+    } else if (a >= b) {
+        
+    }else if (a!=b) {
+        
+    }else if (a || b) {
+        
+    }else if (a && b) {
+
+    }else if(a <= b) {
+        
+    }
+
+    int hello = a==0 ? b : c;
+}
