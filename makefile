@@ -1,8 +1,21 @@
+OS		:= $(shell uname)
 CC      :=  g++
 STD  	:= c++17
 SRC     := ./cpp_src
 BIN     := ./bin
 OBJ     := ./obj
+MKDIR   := mkdir
+RMDIR   := rmdir
+
+ifeq 	($(OS), Linux)
+	MKDIR   := mkdir
+	RMDIR   := rm -rf
+endif
+ifeq    ($(OS), Darwin)
+	MKDIR   := mkdir
+	RMDIR   := rm -rf
+endif
+
 INCLUDE := ./$(SRC)/include
 CFLAGS  := -I$(INCLUDE)
 SRCS    :=$(wildcard $(SRC)/*.cpp)
@@ -18,10 +31,10 @@ $(OBJ)/%.o: $(SRC)/%.cpp | $(OBJ)
 	$(CC) -std=$(STD) $(CFLAGS) -c $< -o $@
 
 $(BIN) $(OBJ):
-	mkdir $@
+	$(MKDIR) $@
 
 run: $(EXE)
 	$< $(ARG1) $(ARG2)
     
 clean:
-	rm -rf $(BIN) $(OBJ)
+	$(RMDIR) $(BIN) $(OBJ)
