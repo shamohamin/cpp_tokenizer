@@ -1,19 +1,25 @@
-OS		:= $(shell uname)
 CC      :=  g++
 STD  	:= c++17
 SRC     := ./cpp_src
 BIN     := ./bin
 OBJ     := ./obj
-MKDIR   := mkdir
-RMDIR   := rmdir
 
-ifeq 	($(OS), Linux)
+MKDIR   := mkdir
+RMDIR   := rm -rf
+
+ifeq 	($(OS),Windows_NT)
 	MKDIR   := mkdir
-	RMDIR   := rm -rf
-endif
-ifeq    ($(OS), Darwin)
-	MKDIR   := mkdir
-	RMDIR   := rm -rf
+	RMDIR   := rmdir
+else
+	OS_NAME := $(shell uname)
+	ifeq ($(OS_NAME),Linux)
+		MKDIR   := mkdir
+		RMDIR   := rm -rf
+	endif
+	ifeq ($OS_NAME),Darwin)
+		MKDIR   := mkdir
+		RMDIR   := rm -rf
+	endif
 endif
 
 INCLUDE := ./$(SRC)/include
