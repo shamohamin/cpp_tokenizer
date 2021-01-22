@@ -1,5 +1,5 @@
 CC      :=  g++
-STD  	:= c++14
+STD  	:= c++17
 SRC     := ./cpp_src
 BIN     := ./bin
 OBJ     := ./obj
@@ -21,7 +21,7 @@ $(BIN) $(OBJ):
 	mkdir $@
 
 run: $(EXE)
-	$<
+	$< $(ARG1) $(ARG2)
     
 clean:
 	rm -rf $(BIN) $(OBJ)

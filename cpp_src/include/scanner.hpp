@@ -4,8 +4,31 @@
 #include "map"
 #include "regex"
 
+#ifdef _WIN32
+        #define OS 1
+    #elif _WIN64
+        #define OS 2
+    #elif __APPLE__ || __MACH__
+        #define OS 0
+    #elif __linux__
+        #define OS 3
+    #elif __FreeBSD__
+        #define OS 5
+    #elif __unix || __unix__
+        #define OS 4
+    #else
+        #define OS -1
+#endif
+
+
 #ifndef _SCANNCER_H
 #define _SCANNCER_H
+
+#define MAC 0
+#define WIN32 1
+#define WIN64 2
+#define LINUX 3
+#define UNIX 4
 
 enum TokenType
 {
@@ -34,8 +57,10 @@ class Token
 {
 public:
     Token(TokenType type, std::string value);
+    Token(){};
     TokenType getType() const;
     std::string getLexeme() const;
+    static Token newToken(TokenType type, std::string value);
 
 private:
     TokenType type;
@@ -82,6 +107,7 @@ private:
     int operatorLogic(int, char, std::string, int);
     int stringCharacterLogic(int, char, std::string, int &);
     int digitLogic(int, std::string, int &);
+    int identifierAndKeyboardsLogic(int, std::string, int);
 };
 
 #endif
