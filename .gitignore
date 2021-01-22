@@ -4,3 +4,6 @@ obj/*
 *.out
 *.exe
 *.o
+outputs/*.json
+env/*
+./outputs
