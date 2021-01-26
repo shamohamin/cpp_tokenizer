@@ -48,7 +48,7 @@ void main() {
     }else if(a <= b) {
         
     }else {
-        
+        char *a, *b;
     }
 
     int hello = a==0 ? b : c;

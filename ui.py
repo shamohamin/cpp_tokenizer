@@ -1,6 +1,6 @@
 from PyQt5 import QtCore
-from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import (QApplication, 
+from PyQt5.QtGui import QColor, QCursor, QFont
+from PyQt5.QtWidgets import (QApplication, QGraphicsDropShadowEffect, 
                              QGroupBox,
                              QHBoxLayout,
                              QLabel,
@@ -106,35 +106,56 @@ class TabView(QWidget):
     
     def initUI(self):
         self.qGroupBox = QGroupBox("Tokens Lexemes")
+        self.qGroupBox.setStyleSheet("background-color: #222222;")
         hBox = QHBoxLayout()
+        
         for tokenType in self.data[Parser.CONTENT]:
             childGroup = QGroupBox(tokenType[Parser.TOKEN_TYPE])
             vbox = QVBoxLayout()
-            print(tokenType[Parser.VALUES])
+            # print(tokenType[Parser.VALUES])
             for val in tokenType[Parser.VALUES]:
                 lexemeLabel = QLabel(val[Parser.LEXEME])
                 lineLabel = QLabel(f"in line {val[Parser.LINE] + 1}")
-                lineLabel.setToolTip(f"""
+                toolTipText = f"""
                                      <html> 
-                                        <div style="padding: 10px">
-                                            <h2> Line </h2> 
-                                            <p> {self.input_lines[val[Parser.LINE]]} </p>
-                                        </div>
+                                        <body> 
+                                            <div style="padding: 10px">
+                                                <h2> Line </h2> 
+                                                <p> {self.input_lines[val[Parser.LINE]]} </p>
+                                            </div>
+                                        </body>
                                      </html>
-                                    """)
+                                """
+                lineLabel.setToolTip(toolTipText)
+                lexemeLabel.setToolTip(toolTipText)
+                lexemeLabel.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
                 lineLabel.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
+                f = QFont("Helvetica [Cronyx]", 20, QFont.Bold)
+                lexemeLabel.setFont(f)
+                lineLabel.setFont(f)
+                lineLabel.setStyleSheet("border-radius: 8px; font-size: 14px")
+                lexemeLabel.setStyleSheet("border-radius: 8px; font-size: 14px")
                 vboxChild = QVBoxLayout()
                 childHbox = QHBoxLayout()
                 childHbox.addWidget(lexemeLabel)
                 childHbox.addStretch()   
                 childHbox.addWidget(lineLabel)
                 vboxChild.addLayout(childHbox)
-                vboxChild.addWidget(QLabel("--------------------")) 
+                sh = QGraphicsDropShadowEffect()
+                sh.setBlurRadius(15)
+                sh.setOffset(0, 10.)
+                sh.setColor(QColor(255, 255, 255, 15))
+                ll = QLabel("------------------------------")
+                ll.setGraphicsEffect(sh)
+                ll.setStyleSheet("""color: rgba(255, 255, 255, 0.6); padding: 2px;
+                                 border-radius: 6px; min-width: 100%; border: none;""")
+                vboxChild.addWidget(ll) 
                 vbox.addLayout(vboxChild)
                 
-            
             vbox.addStretch()
             childGroup.setLayout(vbox)
+            childGroup.setStyleSheet("""margin: 3px; padding: 6px; margin-top: 5px;
+                                     border: .5px solid #eee; border-radius: 6px;""")
             hBox.addWidget(childGroup)
         hBox.addStretch()
         self.qGroupBox.setLayout(hBox)

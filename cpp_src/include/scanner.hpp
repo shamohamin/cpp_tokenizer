@@ -38,7 +38,8 @@ enum TokenType
     COMMENTS,
     KEYBOARD,
     LITERALS,
-    BRACKETS
+    BRACKETS,
+    PREPROCESSORS
 };
 
 static const std::string TokenTypeValues[] =
@@ -49,7 +50,8 @@ static const std::string TokenTypeValues[] =
         std::string{"comments"},
         std::string{"keyboards"},
         std::string{"literals"},
-        std::string{"brackets"}};
+        std::string{"brackets"},
+        std::string{"preprocessor"}};
 
 static const std::regex DIGIT_PATTERN("[+-]?[0-9]*\\.?[0-9]+([Ee][-+]?[0-9]+)?");
 
@@ -77,6 +79,7 @@ public:
     bool isComment(std::string);
     bool isBrackets(std::string);
     bool isLiteral(std::string);
+    bool isPreProcess(std::string);
 
 private:
     static const std::vector<std::string> operators;
@@ -84,6 +87,7 @@ private:
     static const std::vector<std::string> keyboards;
     static const std::vector<std::string> comments;
     static const std::vector<std::string> brackets;
+    static const std::vector<std::string> pre_process;
 };
 
 class Scanner

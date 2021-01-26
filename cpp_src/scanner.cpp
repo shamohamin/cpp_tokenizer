@@ -51,11 +51,11 @@ void Scanner::scan()
                 i = end_line;
                 break;
             }
-            else if (this->tokeneRecognizer->isBrackets(std::string{look_head}))
-            {
-                Token token(BRACKETS, std::string{look_head});
-                this->tokens[BRACKETS].push_back(std::make_pair(token, std::to_string(i)));
-            }
+            // else if (this->tokeneRecognizer->isBrackets(std::string{look_head}))
+            // {
+            //     Token token(BRACKETS, std::string{look_head});
+            //     this->tokens[BRACKETS].push_back(std::make_pair(token, std::to_string(i)));
+            // }
             else if (this->tokeneRecognizer->isOperator(std::string{look_head}))
             {
                 if ((look_head == '+' || look_head == '-') && isdigit(line[j + 1]))
@@ -110,12 +110,11 @@ void Scanner::scan()
                 if (out != -1)
                     j = start + out - 1;
             }
-            else if (isalpha(look_head) || look_head == '_' || look_head == '#')
+            else if (isalpha(look_head) || look_head == '_')
             {
-                if (look_head == '#')
-                    j = this->identifierAndKeyboardsLogic(j + 1, line, i);
-                else
-                    j = this->identifierAndKeyboardsLogic(j, line, i);
+                j = this->identifierAndKeyboardsLogic(j, line, i);
+            }else if (look_head == '#') {
+                j = this->identifierAndKeyboardsLogic(j + 1, line, i);
             }
         }
     }
@@ -226,8 +225,11 @@ int Scanner::identifierAndKeyboardsLogic(int start_pos, std::string line, int li
     Token token;
     if (this->tokeneRecognizer->isKeyboard(temp))
         token = Token::newToken(KEYBOARD, temp);
+    else if (this->tokeneRecognizer->isPreProcess(temp))
+        token = Token::newToken(PREPROCESSORS, "#" + temp);
     else
         token = Token::newToken(IDENTIFIER, temp);
+        
 
     this->tokens[token.getType()].push_back(std::make_pair(token, std::to_string(line_pos)));
 
@@ -304,8 +306,6 @@ void Scanner::writingFile()
                     }
                     generated_lexeme += lexeme[i];
                 }
-                // std::string lexeme = std::regex_replace(val.first.getLexeme(), std::regex("(?!\\\\)\""), "\\\"");
-                // lexeme = std::regex_replace(lexeme, std::regex("\\"), "\\\\");
 
                 file << "\t  { \n"
                      << "\t \t\"lexeme\": "
@@ -319,7 +319,7 @@ void Scanner::writingFile()
                 counter++;
             }
 
-            if (key == 6)
+            if (key == 7)
                 file << " ]} \n";
             else
                 file << "]}, \n";
@@ -376,8 +376,9 @@ const std::vector<std::string> TokenRecognizer::operators{
     "&",
     "||",
     "?",
-    ":"};
-const std::vector<std::string> TokenRecognizer::seperators{",", ";"};
+    ":",
+    "::"};
+const std::vector<std::string> TokenRecognizer::seperators{",", ";", "[", "]", "(", ")", "{", "}"};
 const std::vector<std::string> TokenRecognizer::keyboards{
     "int",
     "void",
@@ -396,8 +397,6 @@ const std::vector<std::string> TokenRecognizer::keyboards{
     "auto",
     "while",
     "do",
-    "include",
-    "define",
     "using",
     "namespace",
     "return",
@@ -436,6 +435,7 @@ const std::vector<std::string> TokenRecognizer::keyboards{
     "delete"};
 const std::vector<std::string> TokenRecognizer::comments{"//", "/*"};
 const std::vector<std::string> TokenRecognizer::brackets{"[", "]", "(", ")", "{", "}"};
+const std::vector<std::string> TokenRecognizer::pre_process{"define", "include", "ifndef", "endif", "ifdef", "elif", "else"};
 
 bool TokenRecognizer::isComment(std::string temp)
 {
@@ -448,6 +448,14 @@ bool TokenRecognizer::isComment(std::string temp)
 bool TokenRecognizer::isOperator(std::string temp)
 {
     for (std::string val : TokenRecognizer::operators)
+        if (temp.compare(val) == 0)
+            return true;
+    return false;
+}
+
+bool TokenRecognizer::isPreProcess(std::string temp) 
+{
+    for (std::string val : TokenRecognizer::pre_process)
         if (temp.compare(val) == 0)
             return true;
     return false;

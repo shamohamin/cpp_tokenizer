@@ -1,5 +1,21 @@
     #include "iostream"   
 
+    #ifdef _WIN32
+        #define OS 1
+    #elif _WIN64
+        #define OS 2
+    #elif __APPLE__ || __MACH__
+        #define OS 0
+    #elif __linux__
+        #define OS 3
+    #elif __FreeBSD__
+        #define OS 5
+    #elif __unix || __unix__
+        #define OS 4
+    #else
+        #define OS -1
+#endif
+
             /*    
     comments*/
 // comments
@@ -25,11 +41,11 @@ void main() {
         literal \
     ";
 
-    string llllll = " multiple \
+    std::string llllll = " multiple \
         line \ 
         literal ";
     
-    string lllllll = "multiple " 
+    std::string lllllll = "multiple " 
                 "line"
                 "literal";
 
