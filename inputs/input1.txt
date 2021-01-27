@@ -16,6 +16,8 @@
         #define OS -1
 #endif
 
+using namespace std::filesystem;
+
             /*    
     comments*/
 // comments
@@ -67,6 +69,9 @@ void main() {
         
     }
 
+    Scanner scanner();
+    scanner->scan();
+
     int hello = a==0 ? b : c;
 }
 
@@ -81,3 +86,27 @@ int start() {
 
     return sum;
 }
+
+class Scanner
+{
+public:
+    Scanner(std::string input_file, std::string output_file);
+    void execute();
+    void printTokens();
+    ~Scanner();
+
+private:
+    std::string input_filepath;
+    std::string output_filepath;
+    TokenRecognizer *tokeneRecognizer;
+    std::vector<std::string> srcLines;
+    std::map<TokenType, std::vector<std::pair<Token, std::string> > > tokens;
+    void readingFile();
+    void scan();
+    void writingFile();
+    bool commentLogic(int, char, int, int &);
+    int operatorLogic(int, char, std::string, int);
+    int stringCharacterLogic(int, char, std::string, int &);
+    int digitLogic(int, std::string, int &);
+    int identifierAndKeyboardsLogic(int, std::string, int);
+};

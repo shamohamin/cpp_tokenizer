@@ -110,11 +110,13 @@ void Scanner::scan()
                 if (out != -1)
                     j = start + out - 1;
             }
+            else if (look_head == '#')
+            {
+                j = this->identifierAndKeyboardsLogic(j + 1, line, i);
+            }
             else if (isalpha(look_head) || look_head == '_')
             {
                 j = this->identifierAndKeyboardsLogic(j, line, i);
-            }else if (look_head == '#') {
-                j = this->identifierAndKeyboardsLogic(j + 1, line, i);
             }
         }
     }
@@ -223,13 +225,12 @@ int Scanner::identifierAndKeyboardsLogic(int start_pos, std::string line, int li
         start_pos--;
 
     Token token;
-    if (this->tokeneRecognizer->isKeyboard(temp))
-        token = Token::newToken(KEYBOARD, temp);
-    else if (this->tokeneRecognizer->isPreProcess(temp))
+    if (this->tokeneRecognizer->isPreProcess(temp) && line[start_pos] == '#')
         token = Token::newToken(PREPROCESSORS, "#" + temp);
+    else if (this->tokeneRecognizer->isKeyboard(temp))
+        token = Token::newToken(KEYBOARD, temp);
     else
         token = Token::newToken(IDENTIFIER, temp);
-        
 
     this->tokens[token.getType()].push_back(std::make_pair(token, std::to_string(line_pos)));
 
@@ -318,7 +319,6 @@ void Scanner::writingFile()
 
                 counter++;
             }
-
             if (key == 7)
                 file << " ]} \n";
             else
@@ -377,7 +377,10 @@ const std::vector<std::string> TokenRecognizer::operators{
     "||",
     "?",
     ":",
-    "::"};
+    "::",
+    "<<",
+    ">>",
+    "->"};
 const std::vector<std::string> TokenRecognizer::seperators{",", ";", "[", "]", "(", ")", "{", "}"};
 const std::vector<std::string> TokenRecognizer::keyboards{
     "int",
@@ -453,7 +456,7 @@ bool TokenRecognizer::isOperator(std::string temp)
     return false;
 }
 
-bool TokenRecognizer::isPreProcess(std::string temp) 
+bool TokenRecognizer::isPreProcess(std::string temp)
 {
     for (std::string val : TokenRecognizer::pre_process)
         if (temp.compare(val) == 0)
